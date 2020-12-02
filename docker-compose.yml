@@ -1,0 +1,28 @@
+version: '3.3'
+
+services:
+  app:
+    build:
+      dockerfile: docker/Dockerfile
+      context: .
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/var/www/app:rw
+  db:
+    image: mysql:5.7
+    depends_on:
+      - app
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 12345
+    ports:
+      - 3306:3306
+volumes:
+  db_data: {}
