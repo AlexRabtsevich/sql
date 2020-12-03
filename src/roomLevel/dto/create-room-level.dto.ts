@@ -1,7 +1,6 @@
-import { CreateUserDto } from '../../users/dto/create-user.dto';
-import { PositionType } from '../../positions/position.type';
-import { CreateAddressDto } from '../../address/dto/create-address.dto';
+import { RoomLevelTypes } from '../room-level.types';
 
-export class CreateEmployeeDto {
-  name: string;
+export class CreateRoomLevelDto {
+  name: RoomLevelTypes;
+  price: number;
 }

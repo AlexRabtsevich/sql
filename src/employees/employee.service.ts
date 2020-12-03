@@ -1,50 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { Customer } from './costomer.entity';
-import { User } from '../users/user.entity';
-import { Address } from '../address/address.entity';
+import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { Employee } from './employee.entity';
+import { UserService } from '../users/user.service';
+import { AddressService } from '../address/address.service';
+import { PositionService } from '../positions/position.service';
 
 @Injectable()
-export class CustomerService {
+export class EmployeeService {
   constructor(
-    @InjectRepository(Customer)
-    private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
+    @Inject(UserService)
+    private readonly userService: UserService,
+    @Inject(AddressService)
+    private readonly addressService: AddressService,
+    @Inject(PositionService)
+    private readonly positionService: PositionService,
   ) {}
 
-  createCustomer(createCustomerDto: CreateCustomerDto): Promise<Customer> {
-    const { address, profile } = createCustomerDto;
+  async createEmployee(
+    createEmployeeDto: CreateEmployeeDto,
+  ): Promise<Employee> {
+    const { position, address, profile } = createEmployeeDto;
 
-    const user = new User();
-    user.firstName = profile.firstName;
-    user.lastName = profile.lastName;
-    user.phone = profile.phone;
-    user.age = profile.age;
+    const employeeProfile = await this.userService.createUser(profile);
+    const employeeAddress = await this.addressService.createAddress(address);
+    const employeePosition = await this.positionService.createPosition(
+      position,
+    );
 
-    const customerAddress = new Address();
-    customerAddress.city = address.city;
-    customerAddress.country = address.country;
-    customerAddress.house = address.house;
-    customerAddress.street = address.street;
+    const employee = new Employee();
+    employee.position = employeePosition;
+    employee.address = employeeAddress;
+    employee.profile = employeeProfile;
 
-    const customer = new Customer();
-    customer.profile = user;
-    customer.address = customerAddress;
-
-    return this.customerRepository.save(customer);
+    return this.employeeRepository.save(employee);
   }
 
-  async findAll(): Promise<Customer[]> {
-    return this.customerRepository.find();
+  async findAll(): Promise<Employee[]> {
+    return this.employeeRepository.find();
   }
 
-  findOne(id: string): Promise<Customer> {
-    return this.customerRepository.findOne(id);
+  findOne(id: string): Promise<Employee> {
+    return this.employeeRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.customerRepository.delete(id);
+    await this.employeeRepository.delete(id);
   }
 }

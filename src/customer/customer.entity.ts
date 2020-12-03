@@ -5,13 +5,8 @@ import { Address } from '../address/address.entity';
 
 @Entity()
 export class Customer {
-  constructor(profile: User, address: Address) {
-    this.address = address;
-    this.profile = profile;
-  }
-
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @OneToOne(() => User, { cascade: true, eager: true })
   @JoinColumn()

@@ -1,30 +1,30 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
 import { CreateRoomLevelDto } from './dto/create-room-level.dto';
-import { Employee } from './employee.entity';
-import { EmployeeService } from './employee.service';
+import { RoomLevel } from './room-level.entity';
+import { RoomLevelService } from './room-level.service';
 
-@Controller('employees')
+@Controller('room-levels')
 export class RoomLevelController {
-  constructor(private readonly employeeService: EmployeeService) {}
+  constructor(private readonly roomLevelService: RoomLevelService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateRoomLevelDto): Promise<Employee> {
-    return this.employeeService.createEmployee(createUserDto);
+  create(@Body() createRoomLevelDto: CreateRoomLevelDto): Promise<RoomLevel> {
+    return this.roomLevelService.createRoomLevel(createRoomLevelDto);
   }
 
   @Get()
-  findAll(): Promise<Employee[]> {
-    return this.employeeService.findAll();
+  findAll(): Promise<RoomLevel[]> {
+    return this.roomLevelService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Employee> {
-    return this.employeeService.findOne(id);
+  findOne(@Param('id') id: string): Promise<RoomLevel> {
+    return this.roomLevelService.findOne(id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
-    return this.employeeService.remove(id);
+    return this.roomLevelService.remove(id);
   }
 }

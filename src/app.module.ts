@@ -10,12 +10,12 @@ import { CustomerModule } from './customer/customer.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '127.0.0.1',
+      host: 'localhost',
       port: 3306,
-      username: 'user',
-      password: '12345',
-      database: 'app',
-      entities: ['dist/**/*.entity{.ts,.js}'],
+      username: 'root',
+      password: 'root',
+      database: 'test',
+      autoLoadEntities: true,
       synchronize: true,
     }),
     UsersModule,

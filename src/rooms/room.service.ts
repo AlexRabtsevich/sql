@@ -2,44 +2,39 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { User } from '../users/user.entity';
-import { Address } from '../address/address.entity';
-import { Employee } from './employee.entity';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { Position } from '../positions/position.entity';
+import { Room } from './room.entity';
+import { CreateRoomDto } from './dto/create-room.dto';
+import { RoomLevel } from '../roomLevel/room-level.entity';
 
 @Injectable()
 export class RoomService {
   constructor(
-    @InjectRepository(Employee)
-    private readonly employeeRepository: Repository<Employee>,
+    @InjectRepository(Room)
+    private readonly roomRepository: Repository<Room>,
+    @InjectRepository(RoomLevel)
+    private readonly roomLevelRepository: Repository<RoomLevel>,
   ) {}
 
-  createEmployee(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
-    const { position, profile, address } = createEmployeeDto;
+  async createRoom(createRoomDto: CreateRoomDto): Promise<Room> {
+    const { number, levelId } = createRoomDto;
+    const roomLevel = await this.roomLevelRepository.findOne(levelId);
 
-    const employeeProfile = new User(profile);
-    const employeeAddress = new Address(address);
-    const employeePosition = new Position(position);
+    const room = new Room();
+    room.level = roomLevel;
+    room.number = number;
 
-    const employee = new Employee(
-      employeeProfile,
-      employeeAddress,
-      employeePosition,
-    );
-
-    return this.employeeRepository.save(employee);
+    return this.roomRepository.save(room);
   }
 
-  async findAll(): Promise<Employee[]> {
-    return this.employeeRepository.find();
+  async findAll(): Promise<Room[]> {
+    return this.roomRepository.find();
   }
 
-  findOne(id: string): Promise<Employee> {
-    return this.employeeRepository.findOne(id);
+  findOne(id: string): Promise<Room> {
+    return this.roomRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.employeeRepository.delete(id);
+    await this.roomRepository.delete(id);
   }
 }

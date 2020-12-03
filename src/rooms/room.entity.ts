@@ -1,29 +1,22 @@
-import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-import { User } from '../users/user.entity';
-import { Address } from '../address/address.entity';
-import { Position } from '../positions/position.entity';
+import { RoomLevel } from '../roomLevel/room-level.entity';
 
 @Entity()
-export class Employee {
-  constructor(profile: User, address: Address, position: Position) {
-    this.profile = profile;
-    this.address = address;
-    this.position = position;
-  }
-
+export class Room {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, { cascade: true, eager: true })
+  @OneToOne(() => RoomLevel, { cascade: true, eager: true })
   @JoinColumn()
-  profile: User;
+  level: RoomLevel;
 
-  @OneToOne(() => Address, { cascade: true, eager: true })
-  @JoinColumn()
-  address: Address;
-
-  @OneToOne(() => Position, { cascade: true, eager: true })
-  @JoinColumn()
-  position: Position;
+  @Column()
+  number: number;
 }

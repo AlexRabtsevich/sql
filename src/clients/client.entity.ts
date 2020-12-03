@@ -1,17 +1,24 @@
-import { Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  Column,
+} from 'typeorm';
 
 import { User } from '../users/user.entity';
 import { Address } from '../address/address.entity';
 
 @Entity()
-export class Customer {
-  constructor(profile: User, address: Address) {
-    this.address = address;
-    this.profile = profile;
-  }
+export class Client {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Column()
+  login: string;
+
+  @Column()
+  password: string;
 
   @OneToOne(() => User, { cascade: true, eager: true })
   @JoinColumn()

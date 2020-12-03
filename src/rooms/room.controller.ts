@@ -1,30 +1,30 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { Employee } from './employee.entity';
-import { EmployeeService } from './employee.service';
+import { Room } from './room.entity';
+import { RoomService } from './room.service';
+import { CreateRoomDto } from './dto/create-room.dto';
 
-@Controller('employees')
+@Controller('rooms')
 export class RoomController {
-  constructor(private readonly employeeService: EmployeeService) {}
+  constructor(private readonly roomService: RoomService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateEmployeeDto): Promise<Employee> {
-    return this.employeeService.createEmployee(createUserDto);
+  create(@Body() createRoomDto: CreateRoomDto): Promise<Room> {
+    return this.roomService.createRoom(createRoomDto);
   }
 
   @Get()
-  findAll(): Promise<Employee[]> {
-    return this.employeeService.findAll();
+  findAll(): Promise<Room[]> {
+    return this.roomService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Employee> {
-    return this.employeeService.findOne(id);
+  findOne(@Param('id') id: string): Promise<Room> {
+    return this.roomService.findOne(id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
-    return this.employeeService.remove(id);
+    return this.roomService.remove(id);
   }
 }

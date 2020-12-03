@@ -1,30 +1,31 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { CustomerService } from './customer.service';
-import { Customer } from './costomer.entity';
 
-@Controller('customers')
-export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+import { PositionService } from './position.service';
+import { Position } from './position.entity';
+import { CreatePositionDto } from './dto/create-position.dto';
+
+@Controller('positions')
+export class PositionController {
+  constructor(private readonly positionService: PositionService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateCustomerDto): Promise<Customer> {
-    return this.customerService.createCustom(createUserDto);
+  create(@Body() createPositionDto: CreatePositionDto): Promise<Position> {
+    return this.positionService.createPosition(createPositionDto);
   }
 
   @Get()
-  findAll(): Promise<Customer[]> {
-    return this.customerService.findAll();
+  findAll(): Promise<Position[]> {
+    return this.positionService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Customer> {
+  findOne(@Param('id') id: string): Promise<Position> {
     console.log(id);
-    return this.customerService.findOne(id);
+    return this.positionService.findOne(id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
-    return this.customerService.remove(id);
+    return this.positionService.remove(id);
   }
 }

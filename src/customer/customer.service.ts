@@ -1,24 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateClientDto } from './dto/create-client.dto';
 import { Customer } from './customer.entity';
-import { User } from '../users/user.entity';
-import { Address } from '../address/address.entity';
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UserService } from '../users/user.service';
+import { AddressService } from '../address/address.service';
 
 @Injectable()
 export class CustomerService {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
+    @Inject(UserService)
+    private readonly userService: UserService,
+    @Inject(AddressService)
+    private readonly addressService: AddressService,
   ) {}
 
-  createCustomer(createCustomerDto: CreateClientDto): Promise<Customer> {
-    const { profile } = createCustomerDto;
+  async createCustomer(
+    createCustomerDto: CreateCustomerDto,
+  ): Promise<Customer> {
+    const { profile, address } = createCustomerDto;
 
-    const customerProfile = new User(profile);
-    const customer = new Customer(customerProfile, customerAddress);
+    const customerProfile = await this.userService.createUser(profile);
+    const customerAddress = await this.addressService.createAddress(address);
+
+    const customer = new Customer();
+    customer.profile = customerProfile;
+    customer.address = customerAddress;
 
     return this.customerRepository.save(customer);
   }

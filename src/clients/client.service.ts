@@ -1,38 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { Customer } from './client.entity';
-import { User } from '../users/user.entity';
-import { Address } from '../address/address.entity';
+import { Client } from './client.entity';
+import { CreateClientDto } from './dto/create-client.dto';
+import { UserService } from '../users/user.service';
+import { AddressService } from '../address/address.service';
 
 @Injectable()
 export class ClientService {
   constructor(
-    @InjectRepository(Customer)
-    private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(Client)
+    private readonly clientRepository: Repository<Client>,
+    @Inject(UserService)
+    private readonly userService: UserService,
+    @Inject(AddressService)
+    private readonly addressService: AddressService,
   ) {}
 
-  createCustomer(createCustomerDto: CreateCustomerDto): Promise<Customer> {
-    const { address, profile } = createCustomerDto;
+  async createCustomer(createCustomerDto: CreateClientDto): Promise<Client> {
+    const { address, profile, login, password } = createCustomerDto;
 
-    const customerProfile = new User(profile);
-    const customerAddress = new Address(address);
-    const customer = new Customer(customerProfile, customerAddress);
+    const clientProfile = await this.userService.createUser(profile);
+    const clientAddress = await this.addressService.createAddress(address);
 
-    return this.customerRepository.save(customer);
+    const client = new Client();
+    client.address = clientAddress;
+    client.profile = clientProfile;
+    client.login = login;
+    client.password = password;
+
+    return this.clientRepository.save(client);
   }
 
-  async findAll(): Promise<Customer[]> {
-    return this.customerRepository.find();
+  async findAll(): Promise<Client[]> {
+    return this.clientRepository.find();
   }
 
-  findOne(id: string): Promise<Customer> {
-    return this.customerRepository.findOne(id);
+  findOne(id: string): Promise<Client> {
+    return this.clientRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.customerRepository.delete(id);
+    await this.clientRepository.delete(id);
   }
 }

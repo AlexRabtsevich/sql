@@ -2,49 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { Customer } from './costomer.entity';
-import { User } from '../users/user.entity';
-import { Address } from '../address/address.entity';
+import { CreatePositionDto } from './dto/create-position.dto';
+import { Position } from './position.entity';
 
 @Injectable()
-export class CustomerService {
+export class PositionService {
   constructor(
-    @InjectRepository(Customer)
-    private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(Position)
+    private readonly positionRepository: Repository<Position>,
   ) {}
 
-  createCustom(createCustomerDto: CreateCustomerDto): Promise<Customer> {
-    const { address, profile } = createCustomerDto;
+  createPosition(createPositionDto: CreatePositionDto): Promise<Position> {
+    const position = new Position();
+    position.name = createPositionDto.position;
 
-    const user = new User();
-    user.firstName = profile.firstName;
-    user.lastName = profile.lastName;
-    user.phone = profile.phone;
-    user.age = profile.age;
-
-    const customerAddress = new Address();
-    customerAddress.city = address.city;
-    customerAddress.country = address.country;
-    customerAddress.house = address.house;
-    customerAddress.street = address.street;
-
-    const customer = new Customer();
-    customer.profile = user;
-    customer.address = customerAddress;
-
-    return this.customerRepository.save(customer);
+    return this.positionRepository.save(position);
   }
 
-  async findAll(): Promise<Customer[]> {
-    return this.customerRepository.find();
+  async findAll(): Promise<Position[]> {
+    return this.positionRepository.find();
   }
 
-  findOne(id: string): Promise<Customer> {
-    return this.customerRepository.findOne(id);
+  findOne(id: string): Promise<Position> {
+    return this.positionRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.customerRepository.delete(id);
+    await this.positionRepository.delete(id);
   }
 }

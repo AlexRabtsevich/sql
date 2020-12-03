@@ -2,40 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { User } from '../users/user.entity';
-import { Address } from '../address/address.entity';
-import { Employee } from './employee.entity';
 import { CreateRoomLevelDto } from './dto/create-room-level.dto';
-import { Position } from '../positions/position.entity';
+import { RoomLevel } from './room-level.entity';
 
 @Injectable()
 export class RoomLevelService {
   constructor(
-    @InjectRepository(Employee)
-    private readonly employeeRepository: Repository<Employee>,
+    @InjectRepository(RoomLevel)
+    private readonly employeeRepository: Repository<RoomLevel>,
   ) {}
 
-  createEmployee(createEmployeeDto: CreateRoomLevelDto): Promise<Employee> {
-    const { position, profile, address } = createEmployeeDto;
+  createRoomLevel(createEmployeeDto: CreateRoomLevelDto): Promise<RoomLevel> {
+    const { price, name } = createEmployeeDto;
 
-    const employeeProfile = new User(profile);
-    const employeeAddress = new Address(address);
-    const employeePosition = new Position(position);
+    const roomLevel = new RoomLevel();
+    roomLevel.price = price;
+    roomLevel.name = name;
 
-    const employee = new Employee(
-      employeeProfile,
-      employeeAddress,
-      employeePosition,
-    );
-
-    return this.employeeRepository.save(employee);
+    return this.employeeRepository.save(roomLevel);
   }
 
-  async findAll(): Promise<Employee[]> {
+  async findAll(): Promise<RoomLevel[]> {
     return this.employeeRepository.find();
   }
 
-  findOne(id: string): Promise<Employee> {
+  findOne(id: string): Promise<RoomLevel> {
     return this.employeeRepository.findOne(id);
   }
 
