@@ -6,11 +6,11 @@ import {
   Column,
 } from 'typeorm';
 
-import { User } from '../users/user.entity';
+import { Profile } from '../profiles/profile.entity';
 import { Address } from '../address/address.entity';
 
 @Entity()
-export class Client {
+export class Manager {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,11 +20,11 @@ export class Client {
   @Column()
   password: string;
 
-  @OneToOne(() => User, { cascade: true, eager: true })
+  @OneToOne(() => Profile, { cascade: true, eager: true })
   @JoinColumn()
-  profile: User;
+  profile: Profile;
 
-  @OneToOne(() => User, { cascade: true, eager: true })
+  @OneToOne(() => Address, { cascade: true, eager: true })
   @JoinColumn()
   address: Address;
 }

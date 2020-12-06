@@ -1,17 +1,17 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class Profile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: false })
+  @Column()
   firstName: string;
 
-  @Column({ nullable: false })
+  @Column()
   lastName: string;
 
-  @Column({ nullable: false })
+  @Column()
   age: number;
 
   @Column()

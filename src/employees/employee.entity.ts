@@ -1,5 +1,11 @@
-import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../users/user.entity';
+import {
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Profile } from '../profiles/profile.entity';
 import { Address } from '../address/address.entity';
 import { Position } from '../positions/position.entity';
 
@@ -8,15 +14,15 @@ export class Employee {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, { cascade: true, eager: true })
+  @OneToOne(() => Profile, { cascade: true, eager: true })
   @JoinColumn()
-  profile: User;
+  profile: Profile;
 
   @OneToOne(() => Address, { cascade: true, eager: true })
   @JoinColumn()
   address: Address;
 
-  @OneToOne(() => Position, { cascade: true, eager: true })
+  @ManyToOne(() => Position, { eager: true, cascade: true })
   @JoinColumn()
   position: Position;
 }

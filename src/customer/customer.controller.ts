@@ -1,7 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 
 import { CustomerService } from './customer.service';
-import { CreateCustomerDto } from './dto/create-customer.dto';
+import {
+  CreateCustomerDto,
+  UpdateCustomerDto,
+} from './dto/create-customer.dto';
 import { Customer } from './customer.entity';
 
 @Controller('customers')
@@ -16,6 +27,11 @@ export class CustomerController {
   @Get()
   findAll(): Promise<Customer[]> {
     return this.customerService.findAll();
+  }
+
+  @Put()
+  update(@Body() updateCustomerDto: UpdateCustomerDto): Promise<Customer> {
+    return this.customerService.updateCustomer(updateCustomerDto);
   }
 
   @Get(':id')

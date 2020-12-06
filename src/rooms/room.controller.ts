@@ -1,8 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 
 import { Room } from './room.entity';
 import { RoomService } from './room.service';
-import { CreateRoomDto } from './dto/create-room.dto';
+import {
+  CreateRoomDto,
+  FindRoomsDto,
+  UpdateRoomDto,
+} from './dto/create-room.dto';
 
 @Controller('rooms')
 export class RoomController {
@@ -13,9 +26,14 @@ export class RoomController {
     return this.roomService.createRoom(createRoomDto);
   }
 
+  @Put()
+  update(@Body() updateRoomDto: UpdateRoomDto): Promise<Room> {
+    return this.roomService.updateRoom(updateRoomDto);
+  }
+
   @Get()
-  findAll(): Promise<Room[]> {
-    return this.roomService.findAll();
+  findAll(@Query() queries: Partial<FindRoomsDto>): Promise<Room[]> {
+    return this.roomService.findAll(queries);
   }
 
   @Get(':id')

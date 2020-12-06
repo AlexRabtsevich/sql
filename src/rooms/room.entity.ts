@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -13,10 +13,13 @@ export class Room {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => RoomLevel, { cascade: true, eager: true })
+  @ManyToOne(() => RoomLevel, { cascade: true, eager: true })
   @JoinColumn()
   level: RoomLevel;
 
   @Column()
   number: number;
+
+  @Column({ default: false })
+  isBooked: boolean;
 }

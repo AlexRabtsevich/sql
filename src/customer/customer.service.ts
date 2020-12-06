@@ -3,17 +3,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Customer } from './customer.entity';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UserService } from '../users/user.service';
+import {
+  CreateCustomerDto,
+  UpdateCustomerDto,
+} from './dto/create-customer.dto';
+import { ProfileService } from '../profiles/profile.service';
 import { AddressService } from '../address/address.service';
+import { Profile } from '../profiles/profile.entity';
+import { Address } from '../address/address.entity';
 
 @Injectable()
 export class CustomerService {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
-    @Inject(UserService)
-    private readonly userService: UserService,
+    @Inject(ProfileService)
+    private readonly userService: ProfileService,
     @Inject(AddressService)
     private readonly addressService: AddressService,
   ) {}
@@ -29,6 +34,18 @@ export class CustomerService {
     const customer = new Customer();
     customer.profile = customerProfile;
     customer.address = customerAddress;
+
+    return this.customerRepository.save(customer);
+  }
+
+  async updateCustomer(
+    updateCustomerDto: UpdateCustomerDto,
+  ): Promise<Customer> {
+    const { address, profile, id } = updateCustomerDto;
+
+    const customer = await this.customerRepository.findOne(id);
+
+    this.customerRepository.merge(customer, { address, profile });
 
     return this.customerRepository.save(customer);
   }

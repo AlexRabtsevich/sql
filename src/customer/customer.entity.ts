@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 
-import { User } from '../users/user.entity';
+import { Profile } from '../profiles/profile.entity';
 import { Address } from '../address/address.entity';
 
 @Entity()
@@ -8,11 +8,11 @@ export class Customer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, { cascade: true, eager: true })
+  @OneToOne(() => Profile, { cascade: true, eager: true, onUpdate: 'CASCADE' })
   @JoinColumn()
-  profile: User;
+  profile: Profile;
 
-  @OneToOne(() => User, { cascade: true, eager: true })
+  @OneToOne(() => Address, { cascade: true, eager: true, onUpdate: 'CASCADE' })
   @JoinColumn()
   address: Address;
 }

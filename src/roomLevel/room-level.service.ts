@@ -9,28 +9,28 @@ import { RoomLevel } from './room-level.entity';
 export class RoomLevelService {
   constructor(
     @InjectRepository(RoomLevel)
-    private readonly employeeRepository: Repository<RoomLevel>,
+    private readonly roomLevelRepository: Repository<RoomLevel>,
   ) {}
 
-  createRoomLevel(createEmployeeDto: CreateRoomLevelDto): Promise<RoomLevel> {
-    const { price, name } = createEmployeeDto;
+  createRoomLevel(createRoomLevelDto: CreateRoomLevelDto): Promise<RoomLevel> {
+    const { price, name } = createRoomLevelDto;
 
     const roomLevel = new RoomLevel();
     roomLevel.price = price;
     roomLevel.name = name;
 
-    return this.employeeRepository.save(roomLevel);
+    return this.roomLevelRepository.save(roomLevel);
   }
 
   async findAll(): Promise<RoomLevel[]> {
-    return this.employeeRepository.find();
+    return this.roomLevelRepository.find();
   }
 
   findOne(id: string): Promise<RoomLevel> {
-    return this.employeeRepository.findOne(id);
+    return this.roomLevelRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.employeeRepository.delete(id);
+    await this.roomLevelRepository.delete(id);
   }
 }
